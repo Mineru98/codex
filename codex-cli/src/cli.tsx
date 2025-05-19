@@ -321,11 +321,14 @@ try {
       : 0;
     const expired = Date.now() - lastRefreshTime > 28 * 24 * 60 * 60 * 1000;
     */
-    if (data.OPENAI_API_KEY) {
-      apiKey = data.OPENAI_API_KEY;
-    }
-    if (data.XAI_API_KEY) {
-      apiKey = data.XAI_API_KEY;
+    if (provider === "xai") {
+      if (data.XAI_API_KEY) {
+        apiKey = data.XAI_API_KEY;
+      }
+    } else {
+      if (data.OPENAI_API_KEY) {
+        apiKey = data.OPENAI_API_KEY;
+      }
     }
   }
 } catch {
