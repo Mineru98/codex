@@ -74,7 +74,16 @@ Help us improve by filing issues or submitting PRs (see the section below for ho
 Install globally:
 
 ```shell
-npm install -g https://github.com/Mineru98/codex
+# 깃 저장소 다운로드
+git clone https://github.com/Mineru98/codex
+# 패키지 의존성 설치
+pnpm install
+# 패키지 빌드
+pnpm build
+
+# codex 명령어 등록
+cd codex-cli
+npm link
 ```
 
 Next, set your OpenAI API key as an environment variable:
@@ -96,6 +105,7 @@ auth.json 파일에 다양한 API 키(OpenAI, XAI, Ollama)를 저장하고, 쉘 
 
 ```shell
 #!/bin/bash
+# ~/.codex/load_auth.sh
 
 AUTH_FILE="$HOME/.codex/auth.json"
 if ! command -v jq &> /dev/null; then
@@ -103,6 +113,12 @@ if ! command -v jq &> /dev/null; then
   exit 1
 fi
 jq -r 'to_entries[] | select(.value != "") | "export \(.key)=\(.value)"' "$AUTH_FILE"
+```
+
+```shell
+# ~/.zshrc
+...
+source <($HOME/.codex/load_auth.sh)
 ```
 
 Run interactively:
