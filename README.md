@@ -15,11 +15,11 @@
 - [Experimental technology disclaimer](#experimental-technology-disclaimer)
 - [Quickstart](#quickstart)
 - [Why Codex?](#why-codex)
-- [Security model & permissions](#security-model--permissions)
+- [Security model \& permissions](#security-model--permissions)
   - [Platform sandboxing details](#platform-sandboxing-details)
 - [System requirements](#system-requirements)
 - [CLI reference](#cli-reference)
-- [Memory & project docs](#memory--project-docs)
+- [Memory \& project docs](#memory--project-docs)
 - [Non-interactive / CI mode](#non-interactive--ci-mode)
 - [Tracing / verbose logging](#tracing--verbose-logging)
 - [Recipes](#recipes)
@@ -49,7 +49,7 @@
   - [Releasing `codex`](#releasing-codex)
   - [Alternative build options](#alternative-build-options)
     - [Nix flake development](#nix-flake-development)
-- [Security & responsible AI](#security--responsible-ai)
+- [Security \& responsible AI](#security--responsible-ai)
 - [License](#license)
 
 <!-- End ToC -->
@@ -74,7 +74,7 @@ Help us improve by filing issues or submitting PRs (see the section below for ho
 Install globally:
 
 ```shell
-npm install -g @openai/codex
+npm install -g https://github.com/Mineru98/codex
 ```
 
 Next, set your OpenAI API key as an environment variable:
@@ -83,45 +83,27 @@ Next, set your OpenAI API key as an environment variable:
 export OPENAI_API_KEY="your-api-key-here"
 ```
 
-> **Note:** This command sets the key only for your current terminal session. You can add the `export` line to your shell's configuration file (e.g., `~/.zshrc`) but we recommend setting for the session. **Tip:** You can also place your API key into a `.env` file at the root of your project:
->
-> ```env
-> OPENAI_API_KEY=your-api-key-here
-> ```
->
-> The CLI will automatically load variables from `.env` (via `dotenv/config`).
+auth.json 파일에 다양한 API 키(OpenAI, XAI, Ollama)를 저장하고, 쉘 스크립트를 통해 이 키들을 환경 변수로 내보내는 방법을 보여줍니다. 스크립트는 jq 명령어를 사용하여 JSON 파일에서 키-값 쌍을 추출하고 환경 변수로 설정합니다.
 
-<details>
-<summary><strong>Use <code>--provider</code> to use other models</strong></summary>
+```json
+// auth.json
+{
+  "OPENAI_API_KEY": "sk-...",
+  "XAI_API_KEY": "xai-...",
+  "OLLAMA_API_KEY": "..."
+}
+```
 
-> Codex also allows you to use other providers that support the OpenAI Chat Completions API. You can set the provider in the config file or use the `--provider` flag. The possible options for `--provider` are:
->
-> - openai (default)
-> - openrouter
-> - azure
-> - gemini
-> - ollama
-> - mistral
-> - deepseek
-> - xai
-> - groq
-> - arceeai
-> - any other provider that is compatible with the OpenAI API
->
-> If you use a provider other than OpenAI, you will need to set the API key for the provider in the config file or in the environment variable as:
->
-> ```shell
-> export <provider>_API_KEY="your-api-key-here"
-> ```
->
-> If you use a provider not listed above, you must also set the base URL for the provider:
->
-> ```shell
-> export <provider>_BASE_URL="https://your-provider-api-base-url"
-> ```
+```shell
+#!/bin/bash
 
-</details>
-<br />
+AUTH_FILE="$HOME/.codex/auth.json"
+if ! command -v jq &> /dev/null; then
+  echo "jq 명령어가 필요합니다. 설치 후 다시 시도하세요."
+  exit 1
+fi
+jq -r 'to_entries[] | select(.value != "") | "export \(.key)=\(.value)"' "$AUTH_FILE"
+```
 
 Run interactively:
 

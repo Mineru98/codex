@@ -314,13 +314,18 @@ try {
   const authFile = path.join(authDir, "auth.json");
   if (fs.existsSync(authFile)) {
     const data = JSON.parse(fs.readFileSync(authFile, "utf-8"));
+    /*
     savedTokens = data.tokens;
     const lastRefreshTime = data.last_refresh
       ? new Date(data.last_refresh).getTime()
       : 0;
     const expired = Date.now() - lastRefreshTime > 28 * 24 * 60 * 60 * 1000;
-    if (data.OPENAI_API_KEY && !expired) {
+    */
+    if (data.OPENAI_API_KEY) {
       apiKey = data.OPENAI_API_KEY;
+    }
+    if (data.XAI_API_KEY) {
+      apiKey = data.XAI_API_KEY;
     }
   }
 } catch {
